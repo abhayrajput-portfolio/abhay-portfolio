@@ -1,9 +1,8 @@
-import { useRef, useState, useEffect } from 'react';
-import { Canvas, useFrame, useLoader } from '@react-three/fiber';
-import { OrbitControls, Sphere, Text } from '@react-three/drei';
-import { TextureLoader } from 'three';
-import * as THREE from 'three';
+import { useRef, useState, Suspense } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
 import { motion } from 'framer-motion';
+import * as THREE from 'three';
 
 // Visited countries data with coordinates
 const visitedCountries = [
@@ -28,14 +27,12 @@ const latLngTo3D = (lat: number, lng: number, radius: number) => {
   const z = radius * Math.sin(phi) * Math.sin(theta);
   const y = radius * Math.cos(phi);
   
-  return { x, y, z };
+  return [x, y, z] as [number, number, number];
 };
 
-// Earth component
+// Simple Earth component
 const Earth = ({ onCountryClick }: { onCountryClick: (country: any) => void }) => {
   const meshRef = useRef<THREE.Mesh>(null);
-  const earthTexture = useLoader(TextureLoader, 'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg');
-  const bumpTexture = useLoader(TextureLoader, 'https://unpkg.com/three-globe/example/img/earth-topology.png');
 
   useFrame((state) => {
     if (meshRef.current) {
@@ -46,13 +43,10 @@ const Earth = ({ onCountryClick }: { onCountryClick: (country: any) => void }) =
   return (
     <group>
       {/* Earth sphere */}
-      <Sphere ref={meshRef} args={[2, 64, 64]}>
-        <meshPhongMaterial
-          map={earthTexture}
-          bumpMap={bumpTexture}
-          bumpScale={0.1}
-        />
-      </Sphere>
+      <mesh ref={meshRef}>
+        <sphereGeometry args={[2, 64, 64]} />
+        <meshPhongMaterial color="#4A90E2" transparent opacity={0.8} />
+      </mesh>
 
       {/* Country markers */}
       {visitedCountries.map((country, index) => {
@@ -60,7 +54,7 @@ const Earth = ({ onCountryClick }: { onCountryClick: (country: any) => void }) =
         return (
           <CountryMarker
             key={country.name}
-            position={[position.x, position.y, position.z]}
+            position={position}
             country={country}
             onClick={() => onCountryClick(country)}
             delay={index * 0.2}
@@ -94,34 +88,16 @@ const CountryMarker = ({
   });
 
   return (
-    <group position={position}>
-      <Sphere
-        ref={meshRef}
-        args={[0.02, 16, 16]}
-        onPointerOver={() => setHovered(true)}
-        onPointerOut={() => setHovered(false)}
-        onClick={onClick}
-      >
-        <meshBasicMaterial color="#00d4ff" transparent opacity={0.8} />
-      </Sphere>
-      
-      {/* Pulsing ring effect */}
-      <Sphere args={[0.04, 16, 16]}>
-        <meshBasicMaterial color="#00d4ff" transparent opacity={0.3} />
-      </Sphere>
-      
-      {hovered && (
-        <Text
-          position={[0, 0.1, 0]}
-          fontSize={0.05}
-          color="#ffffff"
-          anchorX="center"
-          anchorY="bottom"
-        >
-          {country.name}
-        </Text>
-      )}
-    </group>
+    <mesh
+      ref={meshRef}
+      position={position}
+      onPointerOver={() => setHovered(true)}
+      onPointerOut={() => setHovered(false)}
+      onClick={onClick}
+    >
+      <sphereGeometry args={[0.02, 16, 16]} />
+      <meshBasicMaterial color="#00d4ff" transparent opacity={0.8} />
+    </mesh>
   );
 };
 
@@ -207,24 +183,57 @@ const TravelGlobe = () => {
     setSelectedCountry(null);
   };
 
+  // Fallback component if 3D globe fails
+  const FallbackGlobe = () => (
+    <div className="relative w-full h-[600px] md:h-[700px] bg-gradient-to-br from-primary/20 to-secondary/20 rounded-xl flex items-center justify-center">
+      <div className="text-center space-y-4">
+        <div className="w-32 h-32 mx-auto bg-gradient-primary rounded-full flex items-center justify-center">
+          <span className="text-4xl">🌍</span>
+        </div>
+        <h3 className="text-xl font-semibold">Interactive Travel Map</h3>
+        <p className="text-muted-foreground max-w-md">
+          Click on the countries below to explore my travel journey and see photos from each destination.
+        </p>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 max-w-2xl mx-auto mt-6">
+          {visitedCountries.map((country) => (
+            <button
+              key={country.name}
+              onClick={() => handleCountryClick(country)}
+              className="px-3 py-2 bg-card rounded-lg hover:bg-primary/10 transition-colors text-sm"
+            >
+              {country.name}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="relative w-full h-[600px] md:h-[700px]">
-      <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
-        <ambientLight intensity={0.4} />
-        <pointLight position={[10, 10, 10]} intensity={0.8} />
-        <pointLight position={[-10, -10, -10]} intensity={0.3} />
-        
-        <Earth onCountryClick={handleCountryClick} />
-        
-        <OrbitControls
-          enableZoom={true}
-          enablePan={false}
-          minDistance={3}
-          maxDistance={8}
-          autoRotate={true}
-          autoRotateSpeed={0.5}
-        />
-      </Canvas>
+      <Suspense fallback={<FallbackGlobe />}>
+        <Canvas 
+          camera={{ position: [0, 0, 5], fov: 50 }}
+          onCreated={({ gl }) => {
+            gl.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+          }}
+        >
+          <ambientLight intensity={0.4} />
+          <pointLight position={[10, 10, 10]} intensity={0.8} />
+          <pointLight position={[-10, -10, -10]} intensity={0.3} />
+          
+          <Earth onCountryClick={handleCountryClick} />
+          
+          <OrbitControls
+            enableZoom={true}
+            enablePan={false}
+            minDistance={3}
+            maxDistance={8}
+            autoRotate={true}
+            autoRotateSpeed={0.5}
+          />
+        </Canvas>
+      </Suspense>
 
       {/* Instructions */}
       <div className="absolute bottom-4 left-4 right-4 text-center">
