@@ -6,9 +6,9 @@ import profilePhoto from '@/assets/profile-photo.jpg';
 
 const About = () => {
   const interests = [
-    { icon: MapPin, title: 'Travel', description: 'Exploring new cultures and destinations' },
-    { icon: Heart, title: 'Photography', description: 'Capturing moments and memories' },
-    { icon: Coffee, title: 'Technology', description: 'Building innovative solutions' }
+    { icon: MapPin, title: 'Travel', description: 'Exploring new cultures and destinations across USA, Germany, Dubai & India' },
+    { icon: Heart, title: 'Process Engineering', description: 'Optimizing chemical processes and spray drying systems' },
+    { icon: Coffee, title: 'Innovation', description: 'Applying engineering principles to solve complex challenges' }
   ];
 
   return (
@@ -58,32 +58,34 @@ const About = () => {
             className="space-y-6"
           >
             <h3 className="text-3xl font-space font-semibold">
-              Hello! I'm Abhay
+              Hello! I'm Abhaysingh Rajput
             </h3>
             <div className="space-y-4 text-lg leading-relaxed text-muted-foreground">
               <p>
-                I'm a passionate explorer who believes that the world is a book, and those who do not travel read only one page. My journey has taken me across continents, experiencing diverse cultures, meeting incredible people, and creating memories that last a lifetime.
+                I'm a Senior Chemical Engineer at Angiras Rasayan with a strong focus on process design and optimization. I've had the opportunity to commission spray dryers for international projects and optimize process efficiency in challenging environments.
               </p>
               <p>
-                When I'm not planning my next adventure, you'll find me diving deep into technology, working on innovative projects, or capturing the beauty of the world through my camera lens. I believe in living life to the fullest and making every moment count.
+                My dedication to improving operational efficiency and my aptitude for maximizing complex systems have consistently led to innovative solutions. I've been part of dynamic teams looking for opportunities to apply my skills in new contexts and further develop my proficiency.
               </p>
               <p>
-                This portfolio is a glimpse into my journey - from academic achievements to professional experiences, and most importantly, the incredible places I've been fortunate enough to explore.
+                When I'm not optimizing chemical processes, you'll find me exploring new countries and cultures. I believe travel enhances creativity and provides valuable insights that benefit both personal and professional growth.
               </p>
             </div>
 
             <div className="flex flex-wrap gap-4 pt-4">
-              <Button className="bg-gradient-primary text-white">
+              <Button 
+                className="bg-gradient-primary text-white"
+                onClick={() => window.open('https://www.linkedin.com/in/abhayrajput1901', '_blank')}
+              >
                 <ExternalLink className="w-4 h-4 mr-2" />
                 LinkedIn
               </Button>
-              <Button variant="outline">
+              <Button 
+                variant="outline"
+                onClick={() => window.open('mailto:abhayrajput1901@gmail.com', '_blank')}
+              >
                 <ExternalLink className="w-4 h-4 mr-2" />
-                GitHub
-              </Button>
-              <Button variant="outline">
-                <ExternalLink className="w-4 h-4 mr-2" />
-                Instagram
+                Email Me
               </Button>
             </div>
           </motion.div>

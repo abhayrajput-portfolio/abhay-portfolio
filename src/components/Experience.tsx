@@ -7,69 +7,69 @@ import { Button } from '@/components/ui/button';
 const Experience = () => {
   const experiences = [
     {
-      role: 'Software Engineer',
-      company: 'Tech Innovations Inc.',
-      location: 'San Francisco, CA',
-      period: '2022 - Present',
-      description: 'Leading development of scalable web applications using React, Node.js, and cloud technologies. Collaborated with cross-functional teams to deliver high-quality software solutions.',
-      skills: ['React', 'Node.js', 'AWS', 'TypeScript', 'GraphQL'],
+      role: 'Senior Engineer',
+      company: 'Angiras Rasayan',
+      location: 'India',
+      period: 'May 2024 - Present (1 year 4 months)',
+      description: 'Leading process design and optimization initiatives with a strong focus on spray drying technology and chemical engineering principles.',
+      skills: ['Process Design', 'Spray Drying', 'Process Optimization', 'Chemical Engineering'],
       achievements: [
-        'Improved application performance by 40%',
-        'Led a team of 5 developers',
-        'Implemented CI/CD pipelines'
+        'Commissioned spray dryers for international projects',
+        'Optimized process efficiency in challenging environments',
+        'Applied expertise in theoretical knowledge to practical insights'
       ]
     },
     {
-      role: 'Frontend Developer',
-      company: 'Digital Solutions Ltd.',
-      location: 'New York, NY',
-      period: '2020 - 2022',
-      description: 'Developed responsive web applications and user interfaces. Worked closely with design teams to implement pixel-perfect designs and optimal user experiences.',
-      skills: ['JavaScript', 'React', 'Tailwind CSS', 'Redux', 'REST APIs'],
+      role: 'Trainee Process Engineer',
+      company: 'Indian Farmers Fertiliser Coop Ltd',
+      location: 'India',
+      period: 'May 2023 - June 2023 (2 months)',
+      description: 'Gained valuable hands-on experience in fertilizer production processes and large-scale chemical operations.',
+      skills: ['Process Monitoring', 'Production Support', 'Large-scale Operations', 'Fertilizer Production'],
       achievements: [
-        'Reduced page load times by 60%',
-        'Built 15+ responsive applications',
-        'Mentored junior developers'
+        'Acquired basic understanding of fertilizer production processes',
+        'Gained valuable hands-on experience in monitoring and supporting the production process',
+        'Understood the importance of precision and efficiency in large-scale production environments'
       ]
     },
     {
-      role: 'Web Developer Intern',
-      company: 'StartupXYZ',
-      location: 'Austin, TX',
-      period: '2019 - 2020',
-      description: 'Assisted in developing web applications and learned modern development practices. Contributed to both frontend and backend development projects.',
-      skills: ['HTML', 'CSS', 'JavaScript', 'PHP', 'MySQL'],
+      role: 'Sales/Process Engineer',
+      company: 'Aksh Engineering Systems Private Limited - India',
+      location: 'India',
+      period: 'July 2021 - August 2022 (1 year 2 months)',
+      description: 'Handled both sales and process engineering responsibilities, providing technical solutions to clients.',
+      skills: ['Technical Sales', 'Process Engineering', 'Client Relations', 'Engineering Solutions'],
       achievements: [
-        'Built company\'s landing page',
-        'Contributed to 5+ projects',
-        'Learned agile development'
+        'Successfully managed technical sales and client relationships',
+        'Provided process engineering solutions to various clients',
+        'Enhanced technical and commercial understanding of engineering systems'
       ]
     }
   ];
 
   const education = [
     {
-      degree: 'Master of Science in Computer Science',
-      school: 'Stanford University',
-      location: 'Stanford, CA',
-      period: '2018 - 2020',
-      gpa: '3.8/4.0',
+      degree: 'Bachelor of Technology - B.Tech, Chemical Engineering',
+      school: 'Pandit Deendayal Energy University',
+      location: 'India',
+      period: '2020 - 2024',
+      gpa: 'Graduated with honors',
       highlights: [
-        'Specialization in Machine Learning',
-        'Research in Natural Language Processing',
-        'Teaching Assistant for Data Structures'
+        'Specialized in Process Design and Optimization',
+        'Strong foundation in Chemical Engineering principles',
+        'Developed expertise in spray drying and fertilizer production processes'
       ]
     },
     {
-      degree: 'Bachelor of Technology in Computer Engineering',
-      school: 'University of California, Berkeley',
-      location: 'Berkeley, CA',
-      period: '2014 - 2018',
-      gpa: '3.7/4.0',
+      degree: 'Diploma of Education, Chemical Engineering',
+      school: 'Government Polytechnic Gandhinagar',
+      location: 'India',
+      period: 'August 2018 - July 2021',
+      gpa: 'Distinction',
       highlights: [
-        'Magna Cum Laude',
-        'President of Computer Science Club',
-        'Published 2 research papers'
+        'Built strong foundation in chemical engineering fundamentals',
+        'Hands-on experience with industrial processes',
+        'Developed technical and analytical skills'
       ]
     }
   ];

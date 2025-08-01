@@ -22,25 +22,82 @@ const Hero = () => {
         backgroundAttachment: 'fixed'
       }}
     >
-      {/* Animated particles */}
-      <div className="absolute inset-0">
-        {[...Array(20)].map((_, i) => (
+      {/* Enhanced animated background particles */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Floating particles */}
+        {[...Array(30)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-2 h-2 bg-primary/30 rounded-full"
+            className="absolute rounded-full"
+            style={{
+              width: Math.random() * 4 + 2,
+              height: Math.random() * 4 + 2,
+              backgroundColor: `rgba(255, 255, 255, ${Math.random() * 0.3 + 0.1})`,
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
             animate={{
-              x: [0, 100, 0],
-              y: [0, -100, 0],
-              opacity: [0, 1, 0]
+              x: [0, Math.random() * 200 - 100, 0],
+              y: [0, Math.random() * 200 - 100, 0],
+              opacity: [0, Math.random() * 0.8 + 0.2, 0],
+              scale: [0, Math.random() + 0.5, 0],
             }}
             transition={{
-              duration: 8 + i * 0.5,
+              duration: Math.random() * 15 + 10,
               repeat: Infinity,
-              ease: "easeInOut"
+              repeatType: "reverse",
+              ease: "easeInOut",
             }}
+          />
+        ))}
+        
+        {/* Gradient orbs */}
+        {[...Array(5)].map((_, i) => (
+          <motion.div
+            key={`orb-${i}`}
+            className="absolute rounded-full blur-xl"
             style={{
+              width: Math.random() * 300 + 100,
+              height: Math.random() * 300 + 100,
+              background: `radial-gradient(circle, rgba(79, 172, 254, ${Math.random() * 0.1 + 0.05}), transparent)`,
               left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              x: [0, Math.random() * 400 - 200],
+              y: [0, Math.random() * 400 - 200],
+              scale: [1, Math.random() + 1.2, 1],
+            }}
+            transition={{
+              duration: Math.random() * 20 + 15,
+              repeat: Infinity,
+              repeatType: "reverse",
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+
+        {/* Animated lines */}
+        {[...Array(8)].map((_, i) => (
+          <motion.div
+            key={`line-${i}`}
+            className="absolute bg-gradient-to-r from-transparent via-white/10 to-transparent"
+            style={{
+              width: Math.random() * 200 + 100,
+              height: 1,
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              transform: `rotate(${Math.random() * 360}deg)`,
+            }}
+            animate={{
+              opacity: [0, 0.5, 0],
+              scaleX: [0, 1, 0],
+            }}
+            transition={{
+              duration: Math.random() * 5 + 3,
+              repeat: Infinity,
+              repeatType: "reverse",
+              delay: Math.random() * 2,
             }}
           />
         ))}
@@ -61,7 +118,7 @@ const Hero = () => {
             transition={{ delay: 0.2, duration: 1 }}
           >
             Hi, I'm{' '}
-            <span className="text-gradient-secondary">Abhay</span>
+            <span className="text-gradient-secondary">Abhaysingh Rajput</span>
           </motion.h1>
 
           <motion.p
@@ -70,9 +127,9 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 1 }}
           >
-            A passionate traveler, technology enthusiast, and lifelong learner
+            Senior Process/Chemical Engineer passionate about optimization
             <br />
-            exploring the world one adventure at a time
+            and exploring the world one adventure at a time
           </motion.p>
 
           <motion.div

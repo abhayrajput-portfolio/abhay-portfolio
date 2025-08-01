@@ -4,19 +4,38 @@ import { OrbitControls } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 
-// Visited countries data with coordinates
-const visitedCountries = [
-  { name: 'United States', lat: 40, lng: -100, photos: ['usa1.jpg', 'usa2.jpg', 'usa3.jpg'] },
-  { name: 'United Kingdom', lat: 54, lng: -2, photos: ['uk1.jpg', 'uk2.jpg'] },
-  { name: 'France', lat: 46, lng: 2, photos: ['france1.jpg', 'france2.jpg'] },
-  { name: 'Japan', lat: 36, lng: 138, photos: ['japan1.jpg', 'japan2.jpg'] },
-  { name: 'Australia', lat: -25, lng: 133, photos: ['aus1.jpg', 'aus2.jpg'] },
-  { name: 'India', lat: 20, lng: 77, photos: ['india1.jpg', 'india2.jpg'] },
-  { name: 'Thailand', lat: 15, lng: 100, photos: ['thai1.jpg', 'thai2.jpg'] },
-  { name: 'Italy', lat: 42, lng: 12, photos: ['italy1.jpg', 'italy2.jpg'] },
-  { name: 'Spain', lat: 40, lng: -4, photos: ['spain1.jpg', 'spain2.jpg'] },
-  { name: 'Germany', lat: 51, lng: 9, photos: ['germany1.jpg', 'germany2.jpg'] }
+// All countries with coordinates
+const allCountries = [
+  // Major countries - displayed as larger markers
+  { name: 'United States', lat: 39.8283, lng: -98.5795, visited: true, photos: ['usa1.jpg', 'usa2.jpg', 'usa3.jpg'] },
+  { name: 'Germany', lat: 51.1657, lng: 10.4515, visited: true, photos: ['germany1.jpg', 'germany2.jpg'] },
+  { name: 'United Arab Emirates', lat: 23.4241, lng: 53.8478, visited: true, photos: ['uae1.jpg', 'uae2.jpg'] }, // Dubai
+  { name: 'India', lat: 20.5937, lng: 78.9629, visited: true, photos: ['india1.jpg', 'india2.jpg', 'india3.jpg'] },
+  
+  // Other major countries - not visited but shown
+  { name: 'China', lat: 35.8617, lng: 104.1954, visited: false },
+  { name: 'Brazil', lat: -14.2350, lng: -51.9253, visited: false },
+  { name: 'Russia', lat: 61.5240, lng: 105.3188, visited: false },
+  { name: 'Australia', lat: -25.2744, lng: 133.7751, visited: false },
+  { name: 'Canada', lat: 56.1304, lng: -106.3468, visited: false },
+  { name: 'United Kingdom', lat: 55.3781, lng: -3.4360, visited: false },
+  { name: 'France', lat: 46.2276, lng: 2.2137, visited: false },
+  { name: 'Japan', lat: 36.2048, lng: 138.2529, visited: false },
+  { name: 'South Africa', lat: -30.5595, lng: 22.9375, visited: false },
+  { name: 'Egypt', lat: 26.0975, lng: 31.2753, visited: false },
+  { name: 'Mexico', lat: 23.6345, lng: -102.5528, visited: false },
+  { name: 'Argentina', lat: -38.4161, lng: -63.6167, visited: false },
+  { name: 'Italy', lat: 41.8719, lng: 12.5674, visited: false },
+  { name: 'Spain', lat: 40.4637, lng: -3.7492, visited: false },
+  { name: 'Turkey', lat: 38.9637, lng: 35.2433, visited: false },
+  { name: 'Thailand', lat: 15.8700, lng: 100.9925, visited: false },
+  { name: 'Indonesia', lat: -0.7893, lng: 113.9213, visited: false },
+  { name: 'Norway', lat: 60.4720, lng: 8.4689, visited: false },
+  { name: 'Sweden', lat: 60.1282, lng: 18.6435, visited: false },
+  { name: 'New Zealand', lat: -40.9006, lng: 174.8860, visited: false }
 ];
+
+const visitedCountries = allCountries.filter(country => country.visited);
 
 // Convert lat/lng to 3D coordinates
 const latLngTo3D = (lat: number, lng: number, radius: number) => {
@@ -30,60 +49,137 @@ const latLngTo3D = (lat: number, lng: number, radius: number) => {
   return [x, y, z] as [number, number, number];
 };
 
-// Simple Earth component
+// Enhanced Earth component with proper world mapping
 const Earth = ({ onCountryClick }: { onCountryClick: (country: any) => void }) => {
   const meshRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
     if (meshRef.current) {
-      meshRef.current.rotation.y += 0.002;
+      meshRef.current.rotation.y += 0.001;
     }
   });
 
   return (
     <group>
-      {/* Earth sphere */}
+      {/* Earth sphere with enhanced material */}
       <mesh ref={meshRef}>
         <sphereGeometry args={[2, 64, 64]} />
-        <meshPhongMaterial color="#4A90E2" transparent opacity={0.8} />
+        <meshPhongMaterial 
+          color="#2563eb"
+          transparent 
+          opacity={0.9}
+          shininess={100}
+        />
       </mesh>
 
-      {/* Country markers */}
-      {visitedCountries.map((country, index) => {
+      {/* Atmosphere glow */}
+      <mesh scale={2.1}>
+        <sphereGeometry args={[2, 32, 32]} />
+        <meshBasicMaterial 
+          color="#4fc3f7" 
+          transparent 
+          opacity={0.1}
+          side={THREE.BackSide}
+        />
+      </mesh>
+
+      {/* All country markers */}
+      {allCountries.map((country, index) => {
         const position = latLngTo3D(country.lat, country.lng, 2.05);
         return (
           <CountryMarker
             key={country.name}
             position={position}
             country={country}
-            onClick={() => onCountryClick(country)}
-            delay={index * 0.2}
+            onClick={() => country.visited && onCountryClick(country)}
+            delay={index * 0.1}
+            visited={country.visited}
           />
+        );
+      })}
+      
+      {/* Add continent outlines - simplified landmasses */}
+      <ContinentOutlines />
+    </group>
+  );
+};
+
+// Simple continent outlines component
+const ContinentOutlines = () => {
+  const continentData = [
+    // North America outline (simplified)
+    { lat: 45, lng: -100, scale: 0.3 },
+    { lat: 40, lng: -95, scale: 0.2 },
+    { lat: 50, lng: -105, scale: 0.25 },
+    
+    // Europe
+    { lat: 50, lng: 10, scale: 0.15 },
+    { lat: 55, lng: 15, scale: 0.1 },
+    
+    // Asia
+    { lat: 30, lng: 100, scale: 0.4 },
+    { lat: 40, lng: 80, scale: 0.3 },
+    { lat: 50, lng: 120, scale: 0.25 },
+    
+    // Africa
+    { lat: 0, lng: 20, scale: 0.25 },
+    { lat: -20, lng: 25, scale: 0.3 },
+    
+    // South America
+    { lat: -10, lng: -60, scale: 0.2 },
+    { lat: -30, lng: -65, scale: 0.15 },
+    
+    // Australia
+    { lat: -25, lng: 135, scale: 0.1 }
+  ];
+
+  return (
+    <group>
+      {continentData.map((continent, index) => {
+        const position = latLngTo3D(continent.lat, continent.lng, 2.01);
+        return (
+          <mesh key={index} position={position}>
+            <sphereGeometry args={[continent.scale, 8, 8]} />
+            <meshBasicMaterial 
+              color="#22c55e" 
+              transparent 
+              opacity={0.3}
+            />
+          </mesh>
         );
       })}
     </group>
   );
 };
 
-// Country marker component
+// Enhanced Country marker component
 const CountryMarker = ({ 
   position, 
   country, 
   onClick, 
-  delay 
+  delay,
+  visited 
 }: { 
   position: [number, number, number]; 
   country: any; 
   onClick: () => void;
   delay: number;
+  visited: boolean;
 }) => {
   const meshRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
 
   useFrame((state) => {
     if (meshRef.current) {
-      const scale = hovered ? 1.5 : 1 + Math.sin(state.clock.elapsedTime * 2 + delay) * 0.2;
-      meshRef.current.scale.setScalar(scale);
+      if (visited) {
+        // Visited countries glow and pulse
+        const scale = hovered ? 2.5 : 1.5 + Math.sin(state.clock.elapsedTime * 3 + delay) * 0.3;
+        meshRef.current.scale.setScalar(scale);
+      } else {
+        // Non-visited countries are smaller and static
+        const scale = hovered ? 1.2 : 0.8;
+        meshRef.current.scale.setScalar(scale);
+      }
     }
   });
 
@@ -94,9 +190,26 @@ const CountryMarker = ({
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
       onClick={onClick}
+      visible={true}
     >
-      <sphereGeometry args={[0.02, 16, 16]} />
-      <meshBasicMaterial color="#00d4ff" transparent opacity={0.8} />
+      <sphereGeometry args={visited ? [0.03, 16, 16] : [0.015, 8, 8]} />
+      <meshBasicMaterial 
+        color={visited ? "#00ff88" : "#ffffff"} 
+        transparent 
+        opacity={visited ? 0.9 : 0.4}
+      />
+      
+      {/* Glow effect for visited countries */}
+      {visited && (
+        <mesh scale={2}>
+          <sphereGeometry args={[0.03, 16, 16]} />
+          <meshBasicMaterial 
+            color="#00ff88" 
+            transparent 
+            opacity={0.2}
+          />
+        </mesh>
+      )}
     </mesh>
   );
 };
